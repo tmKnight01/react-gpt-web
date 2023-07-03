@@ -1,7 +1,9 @@
 import React from "react";
-import "./index.scss";
+
 import { Breadcrumb, Layout, Menu, theme } from "antd";
-const { Header, Content, Footer, Sider } = Layout;
+import Slider from "../../components/Slider";
+const { Content } = Layout;
+import "./index.scss";
 
 function ChatLayout(): JSX.Element {
   const {
@@ -9,8 +11,8 @@ function ChatLayout(): JSX.Element {
   } = theme.useToken();
   return (
     <>
-      <Layout  className={"chatLayout"}>
-        {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
+      <Layout className={"chatLayout"}>
+        <Slider />
         <Content style={{ margin: "0 16px" }}>
           <Breadcrumb style={{ margin: "16px 0" }}>
             <Breadcrumb.Item>User</Breadcrumb.Item>
