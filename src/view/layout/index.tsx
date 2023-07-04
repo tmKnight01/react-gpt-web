@@ -1,7 +1,9 @@
 import React from "react";
 
-import { Breadcrumb, Layout, Menu, theme } from "antd";
-import Slider from "../../components/Slider";
+import { Layout, theme } from "antd";
+import Slider from "@/components/Slider";
+import ChatFooter from "@/components/Footer";
+import Message from "@/components/Message";
 const { Content } = Layout;
 import "./index.scss";
 
@@ -13,21 +15,22 @@ function ChatLayout(): JSX.Element {
     <>
       <Layout className={"chatLayout"}>
         <Slider />
-        <Content style={{ margin: "0 16px" }}>
-          <Breadcrumb style={{ margin: "16px 0" }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: colorBgContainer,
-            }}
-          >
-            Bill is a cat.
-          </div>
-        </Content>
+        <Layout>
+          <Content className="layout-content">
+            <div
+              className="message-content"
+              style={{
+                background: colorBgContainer,
+                height: "100%",
+                overflowY: "auto",
+              }}
+            >
+              <Message inversion={false} />
+              <Message inversion={true} />
+            </div>
+          </Content>
+          <ChatFooter />
+        </Layout>
       </Layout>
     </>
   );

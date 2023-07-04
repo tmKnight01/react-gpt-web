@@ -26,3 +26,10 @@ html {
   padding: 30px;
   flex: 1;
 }
+
+.mr_6 {
+  margin-right: 6px;
+}
+.ml_6 {
+  margin-left: 6px;
+}

@@ -4,4 +4,16 @@
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+
+    .layout-content {
+        margin: 0 16px;
+        flex: 1;
+
+        &>.message-content {
+            padding: 20px;
+           
+            margin-top: 20px;
+
+        }
+    }
 }

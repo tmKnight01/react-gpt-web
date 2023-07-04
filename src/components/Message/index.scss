@@ -1,0 +1,27 @@
+.mes {
+    width: 100%;
+    margin-bottom: 6px;
+    display: flex;
+
+
+    &_avatar {
+        width: 32px !important;
+        height: 32px;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+    &_content {
+        display: flex;
+        float: 1;
+        flex-direction: column;
+        justify-content: space-around;
+
+        &>p {
+            font-size: 12px;
+            --tw-text-opacity: 1;
+            color: rgb(180 187 196 / var(--tw-text-opacity));
+            margin-bottom: 5px;
+        }
+    }
+}

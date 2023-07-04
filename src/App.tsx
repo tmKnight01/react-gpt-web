@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ChatLayout from "./view/layout/index";
+import ChatLayout from "@/view/layout";
 import "./App.css";
 
 function App() {
@@ -7,7 +7,6 @@ function App() {
 
   return (
     <>
-
       <ChatLayout />
     </>
   );

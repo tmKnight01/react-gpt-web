@@ -1,3 +1,30 @@
-.ant-layout-sider-trigger{
-    position: relative;
+.ant-layout-sider-trigger {
+    position: relative !important;
+}
+.chat-footer {
+    display: flex;
+    width: 100%;
+    align-items: end;
+    &>p {
+        width: 60px;
+        height: 30px;
+        background: rgb(22, 119, 255);
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 5px;
+    }
+
+}
+
+textarea {
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    // scrollbar-width: 0 !important;
+    /* IE去除滚动条IE10+ */
+    -ms-overflow-style: none;
+    /* 火狐 */
+    scrollbar-width: none !important;
+
 }
