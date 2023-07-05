@@ -1,5 +1,3 @@
-
-
 import axios, {
   AxiosResponse,
   RawAxiosRequestHeaders,
@@ -9,7 +7,7 @@ import axios, {
 } from "axios";
 import { message } from "antd";
 const intance = axios.create({
-  baseURL: import.meta.env.VITE_GLOB_API_URL,
+  baseURL: import.meta.env.VITE_APP_API_BASE_URL,
 });
 
 intance.interceptors.request.use(
@@ -41,8 +39,8 @@ export interface HttpOption {
   /*  该过滤器不需要区分data与params，直接将数据写入*/
   data?: any;
   headers?: RawAxiosRequestHeaders;
-  beforeRequest: () => void;
-  afterRequest: () => void; // 当请求数据失败时调用
+  beforeRequest?: () => void;
+  afterRequest?: () => void; // 当请求数据失败时调用
   onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void;
   config?: AxiosRequestConfig;
   signal?: GenericAbortSignal;
@@ -54,19 +52,6 @@ export interface Response<T = any> {
   message: string | null; // fail response message
 }
 
-const successHandler = (res: AxiosResponse<Response>) => {
-  if (res.data.status === "Success") {
-    // 与服务端约定好
-    return res.data;
-  }
-  // 还有一个鉴权问题,后期处理
-  Promise.reject(res.data);
-};
-const failHandler = (err: Response<Error>) => {
-  message.error(err.message || "Error");
-  throw new Error(err.message || "Error");
-};
-
 function http<T = any>({
   url,
   data,
@@ -75,8 +60,24 @@ function http<T = any>({
   onDownloadProgress,
   signal,
   beforeRequest,
-//   afterRequest,
-}: HttpOption) {
+}: //   afterRequest,
+HttpOption) {
+  const successHandler = (res: AxiosResponse<Response<T>>) => {
+    console.log("res.data", res.data);
+    if (res.data.status === "Success" || typeof res.data === "string") {
+      //兼容下返回数据的情况
+
+      console.log("res", res);
+      // 与服务端约定好
+      return res.data.data;
+    }
+    // 还有一个鉴权问题,后期处理
+    Promise.reject(res.data);
+  };
+  const failHandler = (err: Response<Error>) => {
+    message.error(err.message || "Error");
+    throw new Error(err.message || "Error");
+  };
   method = method || "get";
   const params = Object.assign(
     typeof data === "function" ? data() : data ?? {},
@@ -84,9 +85,12 @@ function http<T = any>({
   );
   // 在请求之前要做的操作
   beforeRequest?.();
-  method === "get"
+  // debugger
+  return method === "get"
     ? intance.get(url, { params, signal }).then(successHandler, failHandler)
-    : intance.post(url, { data, headers,onDownloadProgress}).then(successHandler, failHandler);
+    : intance
+        .post(url, { data, headers, onDownloadProgress })
+        .then(successHandler, failHandler);
 }
 
 export default http;
