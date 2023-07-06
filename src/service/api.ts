@@ -6,7 +6,9 @@ export function getChatApi<T>(params: {
   prompt: string;
   signal?: GenericAbortSignal;
   onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void;
+  onUploadProgress?: (progressEvent: AxiosProgressEvent) => void;
 }) {
+  console.log("onDownloadProgress", params.onDownloadProgress);
   const data = {
     prompt: params.prompt,
   };
@@ -15,6 +17,7 @@ export function getChatApi<T>(params: {
     method: "post",
     data,
     onDownloadProgress: params.onDownloadProgress,
+    onUploadProgress: params.onUploadProgress,
     signal: params.signal,
   });
 }

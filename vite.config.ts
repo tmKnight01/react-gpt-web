@@ -1,6 +1,7 @@
 import { defineConfig, loadEnv, PluginOption } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import { resolve } from "path";
+// import { off } from "process";
 
 export default defineConfig((env) => {
   const viteEnv = loadEnv(env.mode, process.cwd()) as unknown as ImportMetaEnv;
@@ -24,6 +25,7 @@ export default defineConfig((env) => {
           changeOrigin: true, // 允许跨域
           rewrite: (path) => path.replace("/api/", "/"),
         },
+        proxy_buffering: "off",
       },
     },
     resolve: {

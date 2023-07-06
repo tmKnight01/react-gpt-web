@@ -42,6 +42,7 @@ export interface HttpOption {
   beforeRequest?: () => void;
   afterRequest?: () => void; // 当请求数据失败时调用
   onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void;
+  onUploadProgress?: (progressEvent: AxiosProgressEvent) => void;
   config?: AxiosRequestConfig;
   signal?: GenericAbortSignal;
 }
@@ -58,6 +59,7 @@ function http<T = any>({
   method,
   headers,
   onDownloadProgress,
+  onUploadProgress,
   signal,
   beforeRequest,
 }: //   afterRequest,
@@ -66,10 +68,9 @@ HttpOption) {
     console.log("res.data", res.data);
     if (res.data.status === "Success" || typeof res.data === "string") {
       //兼容下返回数据的情况
-
       console.log("res", res);
       // 与服务端约定好
-      return res.data.data;
+      return Promise.resolve(res.data.data);
     }
     // 还有一个鉴权问题,后期处理
     Promise.reject(res.data);
@@ -86,10 +87,13 @@ HttpOption) {
   // 在请求之前要做的操作
   beforeRequest?.();
   // debugger
+  console.log("onDownloadProgress1", onDownloadProgress);
   return method === "get"
-    ? intance.get(url, { params, signal }).then(successHandler, failHandler)
+    ? intance
+        .get(url, { params, signal, onDownloadProgress })
+        .then(successHandler, failHandler)
     : intance
-        .post(url, { data, headers, onDownloadProgress })
+        .post(url, params, { headers, onDownloadProgress, onUploadProgress })
         .then(successHandler, failHandler);
 }
 

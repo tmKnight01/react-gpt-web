@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Layout, theme, Input, Button } from "antd";
 import Slider from "@/components/Slider";
 import { SearchOutlined } from "@ant-design/icons";
@@ -19,14 +19,26 @@ function ChatLayout(): JSX.Element {
     return true;
   }, [inputValue]);
 
-  const updateChat = (idx: number, chatItem: Chat.Chat) => {
-    setChatList((chatList) =>
-      chatList.map((item, index) => {
-        if (index === idx) return { ...chatItem };
-        return item;
-      })
-    );
-  };
+  const updateChat = useCallback(
+    (idx: number, chatItem: Chat.Chat) => {
+      // const newChatList  =
+      setTimeout(
+        () =>
+          setChatList((value) => {
+            console.log("chatList", value);
+            const newList = value.map((item, index) => {
+              console.log("itemText", chatItem.content);
+              if (index === value.length - 1) return { ...chatItem };
+              return item;
+            });
+            console.log("newList", newList);
+            return newList;
+          }),
+        1000
+      );
+    },
+    [chatList]
+  );
 
   const onSubmit = async () => {
     console.log("hellp");
@@ -46,27 +58,52 @@ function ChatLayout(): JSX.Element {
         dateTime: new Date().toLocaleString(),
       },
     ]);
-    loadingRef.current = true;
-    let tempVlaue = inputValue;
-    setInputValue(undefined);
-    const data = await getChatApi<Chat.ConversationResponse>({
-      prompt: tempVlaue,
-      onDownloadProgress(progressEvent) {
-        
-        console.log("event", progressEvent);
-      },
-    });
+    try {
+      loadingRef.current = true;
+      let tempVlaue = inputValue;
+      setInputValue(undefined);
+      await getChatApi<Chat.ConversationResponse>({
+        prompt: tempVlaue,
+        signal: new AbortController().signal,
+        onDownloadProgress: ({ event }) => {
+          const responseText = event.currentTarget.responseText as string;
+          // console.log("responseText");
 
-    loadingRef.current = false;
-    setChatList((value) => [
-      ...value,
-      {
-        content: data?.text as string,
-        inversion: true,
-        dateTime: new Date().toLocaleString(),
-      },
-    ]);
-    console.log("data", data);
+          const textAarry = responseText
+            .split("\n")
+            .map((item) => JSON.parse(item));
+          console.log("TextArrar", textAarry);
+          for (let i = 0; i < textAarry.length; i++) {
+            updateChat(chatList.length - 1, {
+              content: textAarry[i].text,
+              inversion: true,
+              dateTime: new Date().toLocaleString(),
+            });
+          }
+
+          // const lastIndex = responseText.lastIndexOf(
+          //   "\n",
+          //   responseText.length - 2
+          // );
+          // let chunk = responseText;
+          // if (lastIndex !== -1) chunk = responseText.substring(lastIndex);
+        },
+      });
+
+      // setChatList((value) => [
+      //   ...value,
+      //   {
+      //     content: data?.text as string,
+      //     inversion: true,
+      //     dateTime: new Date().toLocaleString(),
+      //   },
+      // ]);
+    } catch (err) {
+      console.log("err", err);
+    } finally {
+      console.log("tt", loadingRef.current);
+      loadingRef.current = false;
+    }
   };
 
   const {
