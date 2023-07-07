@@ -3,6 +3,7 @@ declare namespace Chat {
     content: string;
     dateTime: string;
     inversion: boolean;
+    isLoading?:boolean;
   }
   interface ConversationResponse {
     conversationId: string;

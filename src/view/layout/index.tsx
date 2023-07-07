@@ -3,6 +3,7 @@ import { Layout, theme, Input, Button } from "antd";
 import Slider from "@/components/Slider";
 import { SearchOutlined } from "@ant-design/icons";
 import Message from "@/components/Message";
+import useChat from "@/hooks/useChat";
 import { getChatApi } from "@/service/api";
 const { Content, Footer } = Layout;
 const { TextArea } = Input;
@@ -10,54 +11,60 @@ import "./index.scss";
 
 function ChatLayout(): JSX.Element {
   const [inputValue, setInputValue] = useState<string | undefined>(undefined);
-  const [chatList, setChatList] = useState<Chat.Chat[] | []>([]);
+  // const [chatList, setChatList] = useState<Chat.Chat[] | []>([]);
   const loadingRef = useRef<boolean>(false);
-  const addChat = async (item: Chat.Chat) => {};
+
+  const { addChat, updateChat, chatList } = useChat();
 
   const disabled = useMemo(() => {
     if (inputValue && !loadingRef.current) return false;
     return true;
   }, [inputValue]);
 
-  const updateChat = useCallback(
-    (idx: number, chatItem: Chat.Chat) => {
-      // const newChatList  =
-      setTimeout(
-        () =>
-          setChatList((value) => {
-            console.log("chatList", value);
-            const newList = value.map((item, index) => {
-              console.log("itemText", chatItem.content);
-              if (index === value.length - 1) return { ...chatItem };
-              return item;
-            });
-            console.log("newList", newList);
-            return newList;
-          }),
-        1000
-      );
-    },
-    [chatList]
-  );
+  // const updateChat = useCallback(
+  //   (idx: number, chatItem: Chat.Chat) => {
+  //     // const newChatList  =
+  //     setTimeout(
+  //       () =>
+  //         setChatList((value) => {
+  //           console.log("chatList", value);
+  //           const newList = value.map((item, index) => {
+  //             console.log("itemText", chatItem.content);
+  //             if (index === value.length - 1) return { ...chatItem };
+  //             return item;
+  //           });
+  //           console.log("newList", newList);
+  //           return newList;
+  //         }),
+  //       1000
+  //     );
+  //   },
+  //   [chatList]
+  // );
 
   const onSubmit = async () => {
     console.log("hellp");
     console.log("InputValue", inputValue);
     if (!inputValue || inputValue.trim() === "") return;
     if (loadingRef.current) return;
-    setChatList((value) => [
-      ...value,
-      {
-        content: inputValue,
-        inversion: false,
-        dateTime: new Date().toLocaleString(),
-      },
-      {
+    addChat({
+      content: inputValue,
+      inversion: false,
+      dateTime: new Date().toLocaleString(),
+    });
+
+    setTimeout(() => {
+      addChat({
         content: "",
         inversion: true,
         dateTime: new Date().toLocaleString(),
-      },
-    ]);
+        isLoading: true,
+      });
+    },1000);
+    // setChatList((value) => [
+    //   ...value,
+
+    // ]);
     try {
       loadingRef.current = true;
       let tempVlaue = inputValue;
@@ -78,6 +85,7 @@ function ChatLayout(): JSX.Element {
               content: textAarry[i].text,
               inversion: true,
               dateTime: new Date().toLocaleString(),
+              isLoading: false,
             });
           }
 
@@ -123,13 +131,18 @@ function ChatLayout(): JSX.Element {
                 overflowY: "auto",
               }}
             >
-              {chatList.map((item, i) => (
-                <Message
-                  key={i}
-                  inversion={item.inversion}
-                  content={item.content}
-                />
-              ))}
+              {chatList.length ? (
+                chatList.map((item, i) => (
+                  <Message
+                    key={i}
+                    inversion={item.inversion}
+                    content={item.content}
+                    isLoading={item.isLoading}
+                  />
+                ))
+              ) : (
+                <h1 style={{ textAlign: "center" }}> 期待您的发言~</h1>
+              )}
             </div>
           </Content>
           <Footer className="chat-footer">
@@ -152,9 +165,6 @@ function ChatLayout(): JSX.Element {
               loading={loadingRef.current}
               icon={!loadingRef.current && <SearchOutlined />}
             />
-            {/* <Button disabled={disabled} color="">
-              <SearchOutlined style={{ color: "#fff", fontSize: "18px" }} />
-            </Button> */}
           </Footer>
         </Layout>
       </Layout>

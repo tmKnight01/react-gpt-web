@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ChatLayout from "@/view/layout";
+import { RecoilRoot } from "recoil";
 import "./App.css";
 
 function App() {
@@ -7,7 +8,9 @@ function App() {
 
   return (
     <>
-      <ChatLayout />
+      <RecoilRoot>
+        <ChatLayout />
+      </RecoilRoot>
     </>
   );
 }

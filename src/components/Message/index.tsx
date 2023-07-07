@@ -7,11 +7,17 @@ interface ChatMessage {
   inversion: boolean; // true 为request， false为reply,
   dateTime?: string;
   content: string;
+  isLoading?: boolean;
 }
 
 const cls = "mes";
 
-const ChatMessage = ({ inversion, dateTime, content }: ChatMessage) => {
+const ChatMessage = ({
+  inversion,
+  dateTime,
+  content,
+  isLoading=false,
+}: ChatMessage) => {
   return (
     <div
       className={cx(cls)}
@@ -35,7 +41,11 @@ const ChatMessage = ({ inversion, dateTime, content }: ChatMessage) => {
         <p style={{ textAlign: inversion ? "left" : "right" }}>
           {dateTime || new Date().toLocaleString()}
         </p>
-        <Text content={content} inversion={inversion} />
+        <Text
+          content={content}
+          inversion={inversion}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   );
