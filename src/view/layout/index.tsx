@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Layout, theme, Input, Button } from "antd";
 import Slider from "@/components/Slider";
 import { SearchOutlined } from "@ant-design/icons";
@@ -11,103 +11,91 @@ import "./index.scss";
 
 function ChatLayout(): JSX.Element {
   const [inputValue, setInputValue] = useState<string | undefined>(undefined);
-  // const [chatList, setChatList] = useState<Chat.Chat[] | []>([]);
+  const prompt = useRef<string>("");
   const loadingRef = useRef<boolean>(false);
-
   const { addChat, updateChat, chatList } = useChat();
+  const optionsList = chatList.filter(
+    (item) => item.inversion && !!item.conversationOption
+  );
 
+  const lastContext = optionsList[optionsList.length - 1]?.conversationOption;
+  let option = null as any;
+  if (lastContext) option = lastContext;
   const disabled = useMemo(() => {
     if (inputValue && !loadingRef.current) return false;
     return true;
   }, [inputValue]);
 
-  // const updateChat = useCallback(
-  //   (idx: number, chatItem: Chat.Chat) => {
-  //     // const newChatList  =
-  //     setTimeout(
-  //       () =>
-  //         setChatList((value) => {
-  //           console.log("chatList", value);
-  //           const newList = value.map((item, index) => {
-  //             console.log("itemText", chatItem.content);
-  //             if (index === value.length - 1) return { ...chatItem };
-  //             return item;
-  //           });
-  //           console.log("newList", newList);
-  //           return newList;
-  //         }),
-  //       1000
-  //     );
-  //   },
-  //   [chatList]
-  // );
-
   const onSubmit = async () => {
-    console.log("hellp");
-    console.log("InputValue", inputValue);
     if (!inputValue || inputValue.trim() === "") return;
     if (loadingRef.current) return;
+
     addChat({
       content: inputValue,
       inversion: false,
       dateTime: new Date().toLocaleString(),
+      requestOptions: { prompt: inputValue, options: null },
     });
-
-    setTimeout(() => {
-      addChat({
-        content: "",
-        inversion: true,
-        dateTime: new Date().toLocaleString(),
-        isLoading: true,
-      });
-    },1000);
-    // setChatList((value) => [
-    //   ...value,
-
-    // ]);
+    addChat({
+      content: "",
+      inversion: true,
+      dateTime: new Date().toLocaleString(),
+      isLoading: true,
+      requestOptions: { prompt: "", options: null },
+    });
     try {
       loadingRef.current = true;
       let tempVlaue = inputValue;
       setInputValue(undefined);
+      prompt.current = tempVlaue;
       await getChatApi<Chat.ConversationResponse>({
         prompt: tempVlaue,
         signal: new AbortController().signal,
+        options: option,
         onDownloadProgress: ({ event }) => {
           const responseText = event.currentTarget.responseText as string;
-          // console.log("responseText");
-
           const textAarry = responseText
             .split("\n")
             .map((item) => JSON.parse(item));
+
+          try {
+            const data = textAarry[textAarry.length - 1];
+
+            for (let i = 0; i < textAarry.length; i++) {
+              updateChat(chatList.length - 1, {
+                content: textAarry[i].text,
+                inversion: true,
+                dateTime: new Date().toLocaleString(),
+                isLoading: false,
+                conversationOption: {
+                  parentMessageId: data.id,
+                  conversationId: data.conversationId,
+                },
+                requestOptions: { prompt: prompt.current, options: option },
+              });
+            }
+          } catch {}
           console.log("TextArrar", textAarry);
-          for (let i = 0; i < textAarry.length; i++) {
-            updateChat(chatList.length - 1, {
-              content: textAarry[i].text,
-              inversion: true,
-              dateTime: new Date().toLocaleString(),
-              isLoading: false,
-            });
-          }
-
-          // const lastIndex = responseText.lastIndexOf(
-          //   "\n",
-          //   responseText.length - 2
-          // );
-          // let chunk = responseText;
-          // if (lastIndex !== -1) chunk = responseText.substring(lastIndex);
         },
+      }).catch((error) => {
+        updateChat(chatList.length - 1, {
+          content: String(error),
+          inversion: true,
+          dateTime: new Date().toLocaleString(),
+          isLoading: false,
+          requestOptions: {
+            prompt: "",
+          },
+        });
       });
-
-      // setChatList((value) => [
-      //   ...value,
-      //   {
-      //     content: data?.text as string,
-      //     inversion: true,
-      //     dateTime: new Date().toLocaleString(),
-      //   },
-      // ]);
     } catch (err) {
-      console.log("err", err);
+      updateChat(chatList.length - 1, {
+        content: String(err),
+        inversion: true,
+        dateTime: new Date().toLocaleString(),
+        isLoading: false,
+        requestOptions: { prompt: "" },
+      });
     } finally {
       console.log("tt", loadingRef.current);
       loadingRef.current = false;

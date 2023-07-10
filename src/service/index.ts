@@ -65,7 +65,6 @@ function http<T = any>({
 }: //   afterRequest,
 HttpOption) {
   const successHandler = (res: AxiosResponse<Response<T>>) => {
-    console.log("res.data", res.data);
     if (res.data.status === "Success" || typeof res.data === "string") {
       //兼容下返回数据的情况
       console.log("res", res);
@@ -87,7 +86,6 @@ HttpOption) {
   // 在请求之前要做的操作
   beforeRequest?.();
   // debugger
-  console.log("onDownloadProgress1", onDownloadProgress);
   return method === "get"
     ? intance
         .get(url, { params, signal, onDownloadProgress })

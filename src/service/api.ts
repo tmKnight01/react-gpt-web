@@ -5,12 +5,13 @@ import type { GenericAbortSignal, AxiosProgressEvent } from "axios";
 export function getChatApi<T>(params: {
   prompt: string;
   signal?: GenericAbortSignal;
+  options?: Chat.ConversationRequest;
   onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void;
   onUploadProgress?: (progressEvent: AxiosProgressEvent) => void;
 }) {
-  console.log("onDownloadProgress", params.onDownloadProgress);
   const data = {
     prompt: params.prompt,
+    options: params.options,
   };
   return http<T>({
     url: "/chat-process",

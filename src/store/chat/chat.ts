@@ -1,15 +1,20 @@
 import { atom, selector } from "recoil";
 
-const chatList = atom({
+const MychatList = atom({
   key: "chatList",
-  default: [] as unknown as Chat.Chat[],  // 后续换成从
+  default: [] as unknown as Chat.Chat[], // 后续换成从
 });
 
+// const changeChatList = selector({
+//   key: "changeChatList",
+//   get: ({ get }) => {
+//     // console.log("chatList", get(chatList));
+//     return get(chatList);
+//   },
+//   set: ({ set }, newvalue) => {
+//     // console.log(" newValue", newvalue);
+//     return set(chatList, newvalue);
+//   },
+// });
 
-const changeChatList = selector({
-    key: 'changeChatList',
-    get: (({get})=> get(chatList)),
-    set: ({set},newvalue) => set(chatList,newvalue)
-});
-
-export   {chatList,changeChatList}
+export { MychatList };

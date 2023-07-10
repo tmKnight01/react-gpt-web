@@ -3,8 +3,16 @@ declare namespace Chat {
     content: string;
     dateTime: string;
     inversion: boolean;
-    isLoading?:boolean;
+    isLoading?: boolean;
+    conversationOption?: ConversationRequest;
+    requestOptions: { prompt: string; options?: ConversationRequest | null };
   }
+
+  interface ConversationRequest {
+    parentMessageId?: string;
+    conversationId?: string;
+  }
+
   interface ConversationResponse {
     conversationId: string;
     detail: {

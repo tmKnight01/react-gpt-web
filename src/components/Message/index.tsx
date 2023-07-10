@@ -1,4 +1,4 @@
-import React from "react";
+
 import cx from "classnames";
 import Text from "@/components/Text";
 import { Image } from "antd";
@@ -16,8 +16,8 @@ const ChatMessage = ({
   inversion,
   dateTime,
   content,
-  isLoading=false,
-}: ChatMessage) => {
+  isLoading = false,
+}: ChatMessage): JSX.Element => {
   return (
     <div
       className={cx(cls)}
@@ -41,11 +41,7 @@ const ChatMessage = ({
         <p style={{ textAlign: inversion ? "left" : "right" }}>
           {dateTime || new Date().toLocaleString()}
         </p>
-        <Text
-          content={content}
-          inversion={inversion}
-          isLoading={isLoading}
-        />
+        <Text content={content} inversion={inversion} isLoading={isLoading} />
       </div>
     </div>
   );
