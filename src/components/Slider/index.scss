@@ -1,19 +1,44 @@
-.ant-layout-sider-trigger {
-    position: relative !important;
-}
 .chat-footer {
     display: flex;
     width: 100%;
     align-items: end;
+
     &>p {
         width: 60px;
         height: 30px;
-        background: rgb(22, 119, 255);
         border-radius: 5px;
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 0 5px;
+    }
+
+}
+
+
+.slider-cls {
+    padding-top: 30px;
+
+    &>.ant-layout-sider-children {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 16px;
+
+        &>:hover {
+            color: #4096ff;
+            cursor: pointer;
+        }
+    }
+
+    .slider-btm {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        line-height: 50px;
+        height: 50px;
     }
 
 }

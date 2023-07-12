@@ -1,16 +1,22 @@
 import { useMemo, useRef, useState } from "react";
 import { Layout, theme, Input, Button } from "antd";
 import Slider from "@/components/Slider";
-import { SearchOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  GithubOutlined,
+} from "@ant-design/icons";
 import Message from "@/components/Message";
 import useChat from "@/hooks/useChat";
 import { getChatApi } from "@/service/api";
-const { Content, Footer } = Layout;
+const { Content, Footer, Header } = Layout;
 const { TextArea } = Input;
 import "./index.scss";
 
 function ChatLayout(): JSX.Element {
   const [inputValue, setInputValue] = useState<string | undefined>(undefined);
+  const [collapsed, setCollapsed] = useState<boolean>(false);
   const prompt = useRef<string>("");
   const loadingRef = useRef<boolean>(false);
   const { addChat, updateChat, chatList } = useChat();
@@ -108,8 +114,40 @@ function ChatLayout(): JSX.Element {
   return (
     <>
       <Layout className={"chatLayout"}>
-        <Slider />
+        <Slider collapsed={collapsed} />
         <Layout>
+          <Header
+            style={{
+              padding: 0,
+              background: colorBgContainer,
+              marginLeft: "16px",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Button
+              type="text"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed(!collapsed)}
+              style={{
+                fontSize: "16px",
+                width: 64,
+                height: 64,
+              }}
+            />
+            <a
+              href="https://github.com/tmKnight01/react-gpt-web"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                textDecoration: " none",
+                color: "black",
+              }}
+            >
+              tmKnight
+              <GithubOutlined style={{ fontSize: "24px", margin: "0 12px" }} />
+            </a>
+          </Header>
           <Content className="layout-content">
             <div
               className="message-content"
@@ -130,7 +168,7 @@ function ChatLayout(): JSX.Element {
                   />
                 ))
               ) : (
-                <h1 style={{ textAlign: "center" }}> 期待您的发言~</h1>
+                <h1 style={{ textAlign: "center" }}>期待您的发言~</h1>
               )}
             </div>
           </Content>
@@ -142,7 +180,6 @@ function ChatLayout(): JSX.Element {
               }}
               value={inputValue}
               onPressEnter={onSubmit}
-              // showCount
               style={{ scrollbarWidth: "none", scrollbarColor: "red" }}
               placeholder="来说点什么吧..."
               autoSize={{ minRows: 1, maxRows: 6 }}
