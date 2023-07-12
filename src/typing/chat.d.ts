@@ -8,6 +8,25 @@ declare namespace Chat {
     requestOptions: { prompt: string; options?: ConversationRequest | null };
   }
 
+  interface HistoryItem {
+    isEdit: boolean,
+    title: string,
+    uid: number
+  }
+
+  interface chatItem {
+    uid: number,
+    data: Chat.Chat
+  }
+
+  interface ChatState {
+    active: number,
+    history: Array<HistoryItem>,
+    chats: Array<chatItem | {}>
+  }
+
+
+
   interface ConversationRequest {
     parentMessageId?: string;
     conversationId?: string;
