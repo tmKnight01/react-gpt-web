@@ -1,6 +1,5 @@
-import React from "react";
 import { Layout } from "antd";
-import './index.scss'
+import "./index.scss";
 const { Sider } = Layout;
 const Slider = () => {
   return (

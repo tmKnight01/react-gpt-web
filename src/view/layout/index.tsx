@@ -126,6 +126,7 @@ function ChatLayout(): JSX.Element {
                     inversion={item.inversion}
                     content={item.content}
                     isLoading={item.isLoading}
+                    dateTime={item.dateTime}
                   />
                 ))
               ) : (

@@ -1,4 +1,3 @@
-
 import cx from "classnames";
 import Text from "@/components/Text";
 import { Image } from "antd";
@@ -39,7 +38,7 @@ const ChatMessage = ({
       />
       <div className={cx(`${cls}_content`)}>
         <p style={{ textAlign: inversion ? "left" : "right" }}>
-          {dateTime || new Date().toLocaleString()}
+          {dateTime || null}
         </p>
         <Text content={content} inversion={inversion} isLoading={isLoading} />
       </div>
