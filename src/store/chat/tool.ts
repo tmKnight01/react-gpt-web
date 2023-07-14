@@ -1,18 +1,19 @@
-
-
-const LOCAL_NAME = 'CHAT'
-
+import { ls } from "@/utils/strage";
+const LOCAL_NAME = "CHAT";
 
 const defaultState = (): Chat.ChatState => {
     const uid = Date.now();
-    return { active: uid, history: [{ uid, title: "Chat", isEdit: false }], chats: [{ uid, data: [] }] }
-}
+    return {
+        active: uid,  // 初始化uid
+        history: [{ uid, title: "Chat", isEdit: false }],
+        chats: [{ uid, data: [] }],
+    };
+};
 
 const getLocalState = () => {
-
-}
-
-
-
+    const localStrage = ls.get(LOCAL_NAME);
+    console.log('111', defaultState)
+    return localStrage ?? defaultState();
+};
 
 export { defaultState, getLocalState };

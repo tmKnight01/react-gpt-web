@@ -16,13 +16,13 @@ declare namespace Chat {
 
   interface chatItem {
     uid: number,
-    data: Chat.Chat
+    data: Chat.Chat[]
   }
 
   interface ChatState {
     active: number,
     history: Array<HistoryItem>,
-    chats: Array<chatItem | {}>
+    chats: Array<chatItem>
   }
 
 
