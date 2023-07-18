@@ -20,7 +20,6 @@ function ChatLayout(): React.ReactNode {
   // if (lastContext) option = lastContext;
 
   useEffect(() => {
-    console.log("uid", Storage.active);
     navigate(`/chat/${Storage.active}`, {
       replace: true,
     });

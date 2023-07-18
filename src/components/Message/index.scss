@@ -17,7 +17,7 @@
         flex-direction: column;
         justify-content: space-around;
 
-        &>p {
+        &> .message_chat {
             font-size: 12px;
             --tw-text-opacity: 1;
             color: rgb(180 187 196 / var(--tw-text-opacity));

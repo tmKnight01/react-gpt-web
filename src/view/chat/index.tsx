@@ -1,7 +1,7 @@
 import { useState, useRef, useMemo } from "react";
 import { Layout, Input, Button, theme } from "antd";
 import {
-  SearchOutlined,
+  SendOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   GithubOutlined,
@@ -11,8 +11,7 @@ import { useRecoilState } from "recoil";
 import collapse from "@/store/collpse";
 import { getChatApi } from "@/service/api";
 import Message from "@/components/Message";
-import { useChat } from "@/hooks/index";
-import { log } from "console";
+import { useChat, useStorage } from "@/hooks/index";
 
 function ChatContent() {
   const { TextArea } = Input;
@@ -29,26 +28,32 @@ function ChatContent() {
     token: { colorBgContainer },
   } = theme.useToken();
   const { addChat, updateChat, sourceData } = useChat();
-  const { uid } = useParams();
-  console.log("params_uid", uid);
+  const { getChatsByUid } = useStorage();
+
+  const { uid = "" } = useParams();
+
+  const chatsList = useMemo(() => getChatsByUid(uid), [uid, sourceData]);
+
   const onSubmit = async () => {
     if (!inputValue || inputValue.trim() === "") return;
     if (loadingRef.current) return;
 
     let option = null as any;
-    // addChat({
-    //   content: inputValue,
-    //   inversion: false,
-    //   dateTime: new Date().toLocaleString(),
-    //   requestOptions: { prompt: inputValue, options: null },
-    // });
-    // addChat({
-    //   content: "",
-    //   inversion: true,
-    //   dateTime: new Date().toLocaleString(),
-    //   isLoading: true,
-    //   requestOptions: { prompt: "", options: null },
-    // });
+    addChat(uid, {
+      content: inputValue,
+      inversion: false,
+      dateTime: new Date().toLocaleString(),
+      requestOptions: { prompt: inputValue, options: null },
+    });
+
+    addChat(uid, {
+      content: "",
+      inversion: true,
+      dateTime: new Date().toLocaleString(),
+      isLoading: true,
+      requestOptions: { prompt: "", options: null },
+    });
+
     try {
       loadingRef.current = true;
       let tempVlaue = inputValue;
@@ -68,7 +73,7 @@ function ChatContent() {
             const data = textAarry[textAarry.length - 1];
 
             for (let i = 0; i < textAarry.length; i++) {
-              updateChat(chatList.length - 1, {
+              updateChat(uid, chatsList.length - 1, {
                 content: textAarry[i].text,
                 inversion: true,
                 dateTime: new Date().toLocaleString(),
@@ -84,7 +89,7 @@ function ChatContent() {
           console.log("TextArrar", textAarry);
         },
       }).catch((error) => {
-        updateChat(chatList?.length - 1, {
+        updateChat(uid, chatsList.length - 1, {
           content: String(error),
           inversion: true,
           dateTime: new Date().toLocaleString(),
@@ -95,7 +100,7 @@ function ChatContent() {
         });
       });
     } catch (err) {
-      updateChat(chatList?.length - 1, {
+      updateChat(uid, chatsList.length - 1, {
         content: String(err),
         inversion: true,
         dateTime: new Date().toLocaleString(),
@@ -103,7 +108,6 @@ function ChatContent() {
         requestOptions: { prompt: "" },
       });
     } finally {
-      console.log("tt", loadingRef.current);
       loadingRef.current = false;
     }
   };
@@ -151,19 +155,19 @@ function ChatContent() {
             overflowY: "auto",
           }}
         >
-          {/* {dataSourece.length ? (
-        chatList.map((item, i) => (
-          <Message
-            key={i}
-            inversion={item.inversion}
-            content={item.content}
-            isLoading={item.isLoading}
-            dateTime={item.dateTime}
-          />
-        ))
-      ) : (
-        <h1 style={{ textAlign: "center" }}>期待您的发言~</h1>
-      )} */}
+          {chatsList.length ? (
+            chatsList.map((item, i) => (
+              <Message
+                key={i}
+                inversion={item.inversion}
+                content={item.content}
+                isLoading={item.isLoading}
+                dateTime={item.dateTime}
+              />
+            ))
+          ) : (
+            <h1 style={{ textAlign: "center" }}>期待您的发言~</h1>
+          )}
           {null}
         </div>
       </Content>
@@ -180,11 +184,12 @@ function ChatContent() {
           autoSize={{ minRows: 1, maxRows: 6 }}
         />
         <Button
+          style={{ marginLeft: 15, width: 60 }}
+          onClick={onSubmit}
           disabled={disabled}
           type="primary"
-          shape="circle"
           loading={loadingRef.current}
-          icon={!loadingRef.current && <SearchOutlined />}
+          icon={!loadingRef.current && <SendOutlined rotate={-150} />}
         />
       </Footer>
     </Layout>

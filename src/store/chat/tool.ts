@@ -12,7 +12,6 @@ const defaultState = (): Chat.ChatState => {
 
 const getLocalState = () => {
     const localStrage = ls.get(LOCAL_NAME);
-    console.log('111', defaultState)
     return localStrage ?? defaultState();
 };
 

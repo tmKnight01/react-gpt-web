@@ -37,9 +37,12 @@ const ChatMessage = ({
         }
       />
       <div className={cx(`${cls}_content`)}>
-        <p style={{ textAlign: inversion ? "left" : "right" }}>
+        <div
+          className="meaaage_chat"
+          style={{ textAlign: inversion ? "left" : "right" }}
+        >
           {dateTime || null}
-        </p>
+        </div>
         <Text content={content} inversion={inversion} isLoading={isLoading} />
       </div>
     </div>

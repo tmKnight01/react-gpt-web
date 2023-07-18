@@ -11,21 +11,31 @@ const useChat = () => {
     const idx = sourceData.history.findIndex(
       (item) => item.uid === Number(uid)
     );
+
+    console.log("sourceData", sourceData, idx);
     if (idx !== -1) {
-      const cloneData = cloneDeep(sourceData);
-      cloneData.chats[idx].data.unshift(newItem);
-      setSourceData(cloneData);
-      recordLocalStorage();
+      setSourceData((lastSource) => {
+        const cloneData = cloneDeep(lastSource);
+        cloneData.chats[idx].data.push(newItem);
+        recordLocalStorage(cloneData);
+        return cloneData;
+      });
+
     }
   };
 
-  const updateChat = (idx: number, updateItem: Chat.Chat) => {
-    // setChatList((chatList) =>
-    //   chatList.map((item, idx) => {
-    //     if (idx === chatList.length - 1) return { ...updateItem };
-    //     return item;
-    //   })
-    // );
+  const updateChat = (uid: string, idx: number, updateItem: Chat.Chat) => {
+    const chatIndex = sourceData.chats.findIndex(
+      (item) => item.uid === Number(uid)
+    );
+    if (chatIndex !== -1) {
+      setSourceData((oldSource) => {
+        const cloneData = cloneDeep(oldSource);
+        cloneData.chats[chatIndex].data[idx] = updateItem;
+        recordLocalStorage(cloneData);
+        return cloneData;
+      });
+    }
   };
 
   return { addChat, updateChat, sourceData };
