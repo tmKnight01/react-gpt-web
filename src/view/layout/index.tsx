@@ -11,19 +11,13 @@ function ChatLayout(): React.ReactNode {
   const Storage = useStorage();
   const navigate = useNavigate();
   const collapse = useRecoilValue(collapsed);
-  // const optionsList = chatList.filter(
-  //   (item) => item.inversion && !!item.conversationOption
-  // );
-
-  // const lastContext = optionsList[optionsList.length - 1]?.conversationOption;
-
-  // if (lastContext) option = lastContext;
 
   useEffect(() => {
+    console.log("storage.Active", Storage.active);
     navigate(`/chat/${Storage.active}`, {
       replace: true,
     });
-  }, []);
+  }, [Storage.active]);
 
   return (
     <>

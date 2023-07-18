@@ -29,10 +29,12 @@ function ChatContent() {
   } = theme.useToken();
   const { addChat, updateChat, sourceData } = useChat();
   const { getChatsByUid } = useStorage();
-
   const { uid = "" } = useParams();
-
-  const chatsList = useMemo(() => getChatsByUid(uid), [uid, sourceData]);
+  // console.log("uid", uid);
+  const chatsList = useMemo(() => {
+    console.log("uid", uid);
+    return getChatsByUid(uid);
+  }, [uid, sourceData]);
 
   const onSubmit = async () => {
     if (!inputValue || inputValue.trim() === "") return;
@@ -71,22 +73,18 @@ function ChatContent() {
 
           try {
             const data = textAarry[textAarry.length - 1];
-
-            for (let i = 0; i < textAarry.length; i++) {
-              updateChat(uid, chatsList.length - 1, {
-                content: textAarry[i].text,
-                inversion: true,
-                dateTime: new Date().toLocaleString(),
-                isLoading: false,
-                conversationOption: {
-                  parentMessageId: data.id,
-                  conversationId: data.conversationId,
-                },
-                requestOptions: { prompt: prompt.current, options: option },
-              });
-            }
+            updateChat(uid, chatsList.length - 1, {
+              content: data.text,
+              inversion: true,
+              dateTime: new Date().toLocaleString(),
+              isLoading: false,
+              conversationOption: {
+                parentMessageId: data.id,
+                conversationId: data.conversationId,
+              },
+              requestOptions: { prompt: prompt.current, options: option },
+            });
           } catch {}
-          console.log("TextArrar", textAarry);
         },
       }).catch((error) => {
         updateChat(uid, chatsList.length - 1, {
