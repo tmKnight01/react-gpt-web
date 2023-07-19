@@ -1,5 +1,6 @@
 import { useState, useRef, useMemo } from "react";
 import { Layout, Input, Button, theme } from "antd";
+import { Scrollbars } from "react-custom-scrollbars";
 import {
   SendOutlined,
   MenuFoldOutlined,
@@ -30,17 +31,23 @@ function ChatContent() {
   const { addChat, updateChat, sourceData } = useChat();
   const { getChatsByUid } = useStorage();
   const { uid = "" } = useParams();
-  // console.log("uid", uid);
   const chatsList = useMemo(() => {
-    console.log("uid", uid);
     return getChatsByUid(uid);
   }, [uid, sourceData]);
+
+  const optionList = chatsList.filter(
+    (item) => item.inversion && !!item.conversationOption
+  );
+
+  const lastContext = optionList[optionList.length - 1]?.conversationOption;
+
+  let option = null as any;
+  if (lastContext) option = lastContext;
 
   const onSubmit = async () => {
     if (!inputValue || inputValue.trim() === "") return;
     if (loadingRef.current) return;
 
-    let option = null as any;
     addChat(uid, {
       content: inputValue,
       inversion: false,
@@ -73,7 +80,7 @@ function ChatContent() {
 
           try {
             const data = textAarry[textAarry.length - 1];
-            updateChat(uid, chatsList.length - 1, {
+            updateChat(uid, {
               content: data.text,
               inversion: true,
               dateTime: new Date().toLocaleString(),
@@ -87,7 +94,7 @@ function ChatContent() {
           } catch {}
         },
       }).catch((error) => {
-        updateChat(uid, chatsList.length - 1, {
+        updateChat(uid, {
           content: String(error),
           inversion: true,
           dateTime: new Date().toLocaleString(),
@@ -96,9 +103,10 @@ function ChatContent() {
             prompt: "",
           },
         });
+        loadingRef.current = false;
       });
     } catch (err) {
-      updateChat(uid, chatsList.length - 1, {
+      updateChat(uid, {
         content: String(err),
         inversion: true,
         dateTime: new Date().toLocaleString(),
@@ -144,31 +152,34 @@ function ChatContent() {
           <GithubOutlined style={{ fontSize: "24px", margin: "0 12px" }} />
         </a>
       </Header>
-      <Content className="layout-content">
-        <div
-          className="message-content"
-          style={{
-            background: colorBgContainer,
-            height: "100%",
-            overflowY: "auto",
-          }}
-        >
-          {chatsList.length ? (
-            chatsList.map((item, i) => (
-              <Message
-                key={i}
-                inversion={item.inversion}
-                content={item.content}
-                isLoading={item.isLoading}
-                dateTime={item.dateTime}
-              />
-            ))
-          ) : (
-            <h1 style={{ textAlign: "center" }}>期待您的发言~</h1>
-          )}
-          {null}
-        </div>
-      </Content>
+      <Scrollbars>
+        <Content className="layout-content">
+          <div
+            className="message-content"
+            style={{
+              background: colorBgContainer,
+              height: "100%",
+              overflowY: "auto",
+            }}
+          >
+            {chatsList.length ? (
+              chatsList.map((item, i) => (
+                <Message
+                  key={i}
+                  inversion={item.inversion}
+                  content={item.content}
+                  isLoading={item.isLoading}
+                  dateTime={item.dateTime}
+                />
+              ))
+            ) : (
+              <h1 style={{ textAlign: "center" }}>期待您的发言~</h1>
+            )}
+            {null}
+          </div>
+        </Content>
+      </Scrollbars>
+
       <Footer className="chat-footer">
         <TextArea
           onChange={(e) => setInputValue(e.currentTarget.value)}

@@ -1,19 +1,17 @@
 import { Layout, Button } from "antd";
-import { SettingOutlined } from "@ant-design/icons";
-import { useRecoilValue } from "recoil";
+import { SettingOutlined, PlusSquareOutlined } from "@ant-design/icons";
+import { useRecoilValue, useRecoilState } from "recoil";
 import { chatSourceData } from "@/store/chat/chat";
 import useChat from "@/hooks/useChat";
+import collapse from "@/store/collpse";
+
 import "./index.scss";
 
 const { Sider } = Layout;
 
-interface SilderProps {
-  collapsed: boolean;
-}
-
-const Slider = ({ collapsed }: SilderProps) => {
+const Slider = () => {
   const sourceData = useRecoilValue(chatSourceData);
-
+  const [collapsed, setCollapsed] = useRecoilState(collapse);
   const { addHistory, changeChat } = useChat();
 
   const addClick = () =>
@@ -40,16 +38,38 @@ const Slider = ({ collapsed }: SilderProps) => {
         </Button>
         {sourceData.history.map((item, idx) => (
           <Button
-            className={item.uid === sourceData.active ? "clicked" : ""}
-            onClick={() => switchChat(item.uid)}
+            key={idx}
+            className={
+              item.uid === sourceData.active ? "clicked_btn" : "clicked"
+            }
+            onClick={() => {
+              collapsed && setCollapsed((coll) => !coll);
+              switchChat(item.uid);
+            }}
             style={{ marginBottom: "20px" }}
+            icon={
+              collapsed ? (
+                <PlusSquareOutlined
+                  onClick={() => {
+                    setCollapsed((coll) => !coll);
+                    switchChat(item.uid);
+                  }}
+                />
+              ) : null
+            }
           >
-            {item.title}
+            {!collapsed && item.title}
           </Button>
         ))}
       </div>
       <div className="slider-btm">
-        <SettingOutlined style={{ marginRight: "10px" }} /> 设置
+        {collapsed ? (
+          <SettingOutlined style={{ marginRight: "10px", fontSize: "24px" }} />
+        ) : (
+          <>
+            <SettingOutlined style={{ marginRight: "10px" }} /> 设置
+          </>
+        )}
       </div>
     </Sider>
   );

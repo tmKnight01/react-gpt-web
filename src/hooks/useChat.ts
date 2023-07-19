@@ -2,7 +2,7 @@ import { useRecoilState } from "recoil";
 import { chatSourceData } from "@/store/chat/chat";
 import { useNavigate } from "react-router-dom";
 import useStorage from "./useStorage";
-import { clone, cloneDeep } from "lodash";
+import { cloneDeep } from "lodash";
 
 
 
@@ -12,6 +12,7 @@ const useChat = () => {
   const { recordLocalStorage } = useStorage();
 
   const addChat = (uid: string, newItem: Chat.Chat) => {
+    console.log('uid', uid);
     const idx = sourceData.history.findIndex(
       (item) => item.uid === Number(uid)
     );
@@ -19,7 +20,7 @@ const useChat = () => {
     if (idx !== -1) {
       setSourceData((lastSource) => {
         const cloneData = cloneDeep(lastSource);
-       
+
         cloneData.chats[idx].data.push(newItem);
         console.log('chats', cloneData);
         recordLocalStorage(cloneData);
@@ -30,7 +31,7 @@ const useChat = () => {
 
   const updateChat = async (
     uid: string,
-    idx: number,
+    // idx: number,
     updateItem: Chat.Chat
   ) => {
     console.log("sourceData1", sourceData);
@@ -60,7 +61,7 @@ const useChat = () => {
       const cloneData = cloneDeep(oldSource);
       cloneData.history.unshift(history);
       cloneData.active = history.uid;
-      cloneData.chats.push({ uid: history.uid, data: [] });
+      cloneData.chats.unshift({ uid: history.uid, data: [] });
       recordLocalStorage(cloneData);
       navigate(`/chat/${history.uid}`, {
         replace: true,

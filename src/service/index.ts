@@ -65,12 +65,10 @@ function http<T = any>({
 }: //   afterRequest,
 HttpOption) {
   const successHandler = (res: AxiosResponse<Response<T>>) => {
-    if (res.data.status === "Success" || typeof res.data === "string") {
-      //兼容下返回数据的情况
-      console.log("res", res);
-      // 与服务端约定好
+    //兼容下返回数据流的情况
+    if (res.data.status === "Success" || typeof res.data === "string")
       return Promise.resolve(res.data.data);
-    }
+
     // 还有一个鉴权问题,后期处理
     Promise.reject(res.data);
   };

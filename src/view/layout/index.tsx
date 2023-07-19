@@ -22,7 +22,7 @@ function ChatLayout(): React.ReactNode {
   return (
     <>
       <Layout className={"chatLayout"}>
-        <Slider collapsed={collapse} />
+        <Slider />
         <Outlet />
       </Layout>
     </>
