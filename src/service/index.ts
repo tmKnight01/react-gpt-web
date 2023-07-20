@@ -29,7 +29,7 @@ intance.interceptors.response.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  } 
 );
 
 // 二次封装axios实例，暴露downloadProcess,header等选项

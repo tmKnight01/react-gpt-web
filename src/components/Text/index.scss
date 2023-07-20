@@ -9,8 +9,83 @@
 
 .reply {
     --tw-text-opacity: 1;
-    --tw-bg-opacity: 1;
-    background-color: rgb(244 246 248 / var(--tw-bg-opacity));
+    --tw-bg-opacity: 1.5;
+    background-color: rgb(236, 242, 248);
     color: black;
 
+}
+
+.markdown_body {
+    // background-color: transparent;
+    font-size: 14px;
+
+    p {
+        white-space: pre-wrap;
+        line-height: 28px;
+        &>code{
+            background-color: rgb(225, 224, 224);
+            padding: 5px;
+            border-radius: 5px;
+        }
+    }
+
+    ol {
+        list-style-type: decimal;
+    }
+
+    ul {
+        list-style-type: disc;
+    }
+
+    pre code,
+    pre tt {
+        line-height: 1.65;
+    }
+
+    .highlight pre,
+    pre {
+        background-color: #fff;
+    }
+
+    code.hljs {
+        padding: 0;
+        // background-color: #65a665;
+    }
+
+    .code-block {
+        &-wrapper {
+            position: relative;
+            padding: 24px;
+        }
+
+        &-header {
+            position: absolute;
+            top: 5px;
+            right: 0;
+            width: 100%;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            color: #b3b3b3;
+
+            &__copy {
+                cursor: pointer;
+                margin-left: 0.5rem;
+                user-select: none;
+
+                &:hover {
+                    color: #2d65c5;
+                }
+            }
+        }
+    }
+}
+
+html.dark {
+
+    .highlight pre,
+    pre {
+        background-color: #282c34;
+    }
 }

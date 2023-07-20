@@ -74,9 +74,13 @@ function ChatContent() {
         options: option,
         onDownloadProgress: ({ event }) => {
           const responseText = event.currentTarget.responseText as string;
-          const textAarry = responseText
-            .split("\n")
-            .map((item) => JSON.parse(item));
+          const textAarry = responseText.split("\n").map((item) => {
+            try {
+              return JSON.parse(item);
+            } catch (err) {
+              console.log("err", err);
+            }
+          });
 
           try {
             const data = textAarry[textAarry.length - 1];
