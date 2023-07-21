@@ -1,9 +1,9 @@
 
 
-interface StorageData<T = any> {
-    data: T
-    expire: number | null
-}  // 数据需要有过期时间
+// interface StorageData<T = any> {
+//     data: T
+//     expire: number | null
+// }  // 数据需要有过期时间
 
 
 function createLocalStorage() {
