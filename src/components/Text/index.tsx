@@ -17,7 +17,6 @@ interface TextProps {
 function Text({ content, inversion, isLoading }: TextProps) {
   const mdi = new MarkdownIt({
     linkify: true,
-    // html: true,
     highlight(code, language) {
       const validLang = !!(language && hljs.getLanguage(language));
       if (validLang) {
@@ -34,7 +33,12 @@ function Text({ content, inversion, isLoading }: TextProps) {
   }
 
   const mdText = useMemo(() => {
-    return parse(mdi.render(content));
+    try {
+      return parse(mdi.render(content));
+    } catch (err) {
+      console.log("err", err);
+      return content;
+    }
   }, [content]);
 
   return (

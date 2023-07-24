@@ -1,6 +1,6 @@
 import { useState, useRef, useMemo } from "react";
 import { Layout, Input, Button, theme } from "antd";
-import { Scrollbars } from "react-custom-scrollbars";
+
 import {
   SendOutlined,
   MenuFoldOutlined,
@@ -156,33 +156,34 @@ function ChatContent() {
           <GithubOutlined style={{ fontSize: "24px", margin: "0 12px" }} />
         </a>
       </Header>
-      <Scrollbars>
-        <Content className="layout-content">
-          <div
-            className="message-content"
-            style={{
-              background: colorBgContainer,
-              height: "100%",
-              overflowY: "auto",
-            }}
-          >
-            {chatsList.length ? (
-              chatsList.map((item, i) => (
-                <Message
-                  key={i}
-                  inversion={item.inversion}
-                  content={item.content}
-                  isLoading={item.isLoading}
-                  dateTime={item.dateTime}
-                />
-              ))
-            ) : (
-              <h1 style={{ textAlign: "center" }}>期待您的发言~</h1>
-            )}
-            {null}
-          </div>
-        </Content>
-      </Scrollbars>
+
+      <Content className="layout-content">
+        {/* <Scrollbars > */}
+        <div
+          className="message-content"
+          style={{
+            background: colorBgContainer,
+            height: "100%",
+            overflowY: "auto",
+          }}
+        >
+          {chatsList.length ? (
+            chatsList.map((item, i) => (
+              <Message
+                key={i}
+                inversion={item.inversion}
+                content={item.content}
+                isLoading={item.isLoading}
+                dateTime={item.dateTime}
+              />
+            ))
+          ) : (
+            <h1 style={{ textAlign: "center" }}>期待您的发言~</h1>
+          )}
+          {null}
+        </div>
+        {/* </Scrollbars> */}
+      </Content>
 
       <Footer className="chat-footer">
         <TextArea

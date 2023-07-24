@@ -9,11 +9,29 @@
         margin: 0 16px;
         height: 100%;
         flex: 1;
+        overflow: hidden;
 
         &>.message-content {
+            box-sizing: border-box;
             padding: 20px;
-            margin-top: 20px;
+            margin: 20px 0;
+            &::-webkit-scrollbar {
+                width: 6px;
+                height: 10px;
+            }
 
+            &::-webkit-scrollbar-track {
+                background: rgb(239, 239, 239);
+                border-radius: 2px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                background: #dbdbdb;
+                border-radius: 10px;
+            }
+            &::-webkit-scrollbar-thumb:hover{
+                background: #a7a6a6;
+              }
         }
     }
 }

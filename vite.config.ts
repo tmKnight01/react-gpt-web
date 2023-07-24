@@ -1,6 +1,6 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import alias from "@rollup/plugin-alias";
+import { visualizer } from 'rollup-plugin-visualizer'
 import { resolve } from "path";
 
 export default defineConfig((env) => {
@@ -8,17 +8,29 @@ export default defineConfig((env) => {
 
   return {
     envDir: "./env",
-    plugins: [react()],
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          react: ["react"],
-          antd: ["antd"],
+    plugins: [react(), visualizer({
+      gzipSize: true,
+      brotliSize: true,
+      emitFile: false,
+      filename: "analyze.html", //分析图生成的文件名
+      open: true //如果存在本地服务端口，将在打包后自动展示
+    })],
+
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'react': ["react", "react-dom"],
+            "antd-library": ["antd", "@ant-design/icons"],
+            'lodash': ['lodash'],
+            'highlight': ["highlight.js"]
+
+          },
 
         },
-
       },
     },
+
     css: {
       preprocessorOptions: {
         scss: {},

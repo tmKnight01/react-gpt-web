@@ -29,7 +29,7 @@ intance.interceptors.response.use(
   },
   (error) => {
     return Promise.reject(error);
-  } 
+  }
 );
 
 // 二次封装axios实例，暴露downloadProcess,header等选项
@@ -63,14 +63,17 @@ function http<T = any>({
   signal,
   beforeRequest,
 }: //   afterRequest,
-HttpOption) {
+  HttpOption) {
   const successHandler = (res: AxiosResponse<Response<T>>) => {
     //兼容下返回数据流的情况
     if (res.data.status === "Success" || typeof res.data === "string")
       return Promise.resolve(res.data.data);
 
+
+    console.log('err mes', res.data);
     // 还有一个鉴权问题,后期处理
-    Promise.reject(res.data);
+    message.error(res.data.message || "Error");
+    throw new Error(res.data.message || "Error");
   };
   const failHandler = (err: Response<Error>) => {
     message.error(err.message || "Error");
@@ -86,11 +89,11 @@ HttpOption) {
   // debugger
   return method === "get"
     ? intance
-        .get(url, { params, signal, onDownloadProgress })
-        .then(successHandler, failHandler)
+      .get(url, { params, signal, onDownloadProgress })
+      .then(successHandler, failHandler)
     : intance
-        .post(url, params, { headers, onDownloadProgress, onUploadProgress })
-        .then(successHandler, failHandler);
+      .post(url, params, { headers, onDownloadProgress, onUploadProgress })
+      .then(successHandler, failHandler);
 }
 
 export default http;

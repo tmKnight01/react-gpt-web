@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ReactGptWeb</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/png;base64,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" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ReactGptWeb</title>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>

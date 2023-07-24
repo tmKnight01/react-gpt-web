@@ -20,7 +20,7 @@ declare namespace Chat {
   }
 
   interface ChatState {
-    active: number,
+    active: number | null,
     history: Array<HistoryItem>,
     chats: Array<chatItem>
   }
