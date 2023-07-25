@@ -19,7 +19,8 @@
     "react-dom": "^18.2.0",
     "react-router": "^6.14.1",
     "react-router-dom": "^6.14.1",
-    "rollup-plugin-visualizer": "^5.9.2"
+    "rollup-plugin-visualizer": "^5.9.2",
+    "vite-plugin-compression": "^0.5.1"
   },
   "devDependencies": {
     "@ant-design/icons": "^5.1.4",
