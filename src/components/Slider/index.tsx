@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Layout, Button, Input, Modal } from "antd";
+import { Layout, Button, Input, Modal, Form, Switch } from "antd";
 import {
   SettingOutlined,
   PlusSquareOutlined,
@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { chatSourceData } from "@/store/chat/chat";
+import { themeMap, setting } from "@/store/setting";
 import { useChat, useStorage } from "@/hooks";
 import collapse from "@/store/collpse";
 import "./index.scss";
@@ -16,6 +17,8 @@ const { Sider } = Layout;
 
 const Slider = () => {
   const sourceData = useRecoilValue(chatSourceData);
+  const themColor = useRecoilValue(themeMap);
+  const settingColor = useRecoilValue(setting).Theme;
   const [collapsed, setCollapsed] = useRecoilState(collapse);
   const { addHistory, changeChat } = useChat();
   const { updateHistory, deleteHistory } = useStorage();
@@ -26,6 +29,7 @@ const Slider = () => {
     addHistory({ uid: Date.now(), title: "New Chat", isEdit: false });
 
   const switchChat = (uid: number) => changeChat(uid);
+  const [settingIsShow, setSettingIsShow] = useState<boolean>(false);
 
   const changeTitle = (
     e: React.KeyboardEvent<HTMLInputElement>,
@@ -35,7 +39,6 @@ const Slider = () => {
     setIsEdit(false);
   };
 
-  // const deleteChatHistory =  (idx:number) =>
   useEffect(() => {
     idx !== -1 && setIsShow(true);
   }, [idx]);
@@ -61,6 +64,11 @@ const Slider = () => {
           {sourceData.history.map((item, idx) => (
             <Button
               key={idx}
+              style={{
+                ...themColor[settingColor],
+                marginBottom: "20px",
+                height: 40,
+              }}
               className={
                 item.uid === sourceData.active ? "clicked_btn" : "clicked"
               }
@@ -68,7 +76,7 @@ const Slider = () => {
                 collapsed && setCollapsed((coll) => !coll);
                 switchChat(item.uid);
               }}
-              style={{ marginBottom: "20px", height: 40 }}
+              // style={{  }}
               icon={
                 collapsed ? (
                   <PlusSquareOutlined
@@ -114,14 +122,25 @@ const Slider = () => {
             </Button>
           ))}
         </div>
-        <div className="slider-btm">
+        <div
+          className="slider-btm"
+          onClick={() => setSettingIsShow((val) => !val)}
+          style={{ ...themColor[settingColor] }}
+        >
           {collapsed ? (
             <SettingOutlined
-              style={{ marginRight: "10px", fontSize: "24px" }}
+              style={{
+                marginRight: "10px",
+                fontSize: "24px",
+                ...themColor[settingColor],
+              }}
             />
           ) : (
             <>
-              <SettingOutlined style={{ marginRight: "10px" }} /> 设置
+              <SettingOutlined
+                style={{ marginRight: "10px", ...themColor[settingColor] }}
+              />
+              设置
             </>
           )}
         </div>
@@ -137,6 +156,19 @@ const Slider = () => {
         {idx !== -1 && (
           <h2>您确认删除{sourceData.history[idx || 0]?.title}历史记录吗?</h2>
         )}
+      </Modal>
+
+      <Modal
+        open={settingIsShow}
+        onOk={() => setSettingIsShow(false)}
+        onCancel={() => setSettingIsShow((val) => !val)}
+      >
+        <h2>
+          <SettingOutlined style={{ marginRight: "10px" }} /> 设置
+        </h2>
+        <Form>
+          <Form.Item name={"theme"} label="主题"></Form.Item>
+        </Form>
       </Modal>
     </>
   );

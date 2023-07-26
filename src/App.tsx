@@ -1,13 +1,21 @@
 import ChatLayout from "@/view/layout";
 import ChatContent from "@/view/chat";
 import { HashRouter, Routes, Route } from "react-router-dom";
-import { RecoilRoot } from "recoil";
+import { ConfigProvider } from "antd";
+import { RecoilRoot, useRecoilValue } from "recoil";
+import { themeMap } from "@/store/setting";
 import "./App.css";
 
 function App() {
-  return (
-    <>
-      <RecoilRoot>
+  const RecoilComponent = () => {
+    const AntdTheme = useRecoilValue(themeMap).antdTheme;
+
+    return (
+      <ConfigProvider
+        theme={{
+          algorithm: AntdTheme,
+        }}
+      >
         <HashRouter>
           <Routes>
             <Route path="/" element={<ChatLayout />}>
@@ -15,6 +23,14 @@ function App() {
             </Route>
           </Routes>
         </HashRouter>
+      </ConfigProvider>
+    );
+  };
+
+  return (
+    <>
+      <RecoilRoot>
+        <RecoilComponent />
       </RecoilRoot>
     </>
   );

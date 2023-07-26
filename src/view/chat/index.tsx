@@ -1,6 +1,5 @@
 import { useState, useRef, useMemo } from "react";
 import { Layout, Input, Button, theme } from "antd";
-
 import {
   SendOutlined,
   MenuFoldOutlined,
@@ -8,8 +7,9 @@ import {
   GithubOutlined,
 } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import collapse from "@/store/collpse";
+import { themeMap, setting } from "@/store/setting";
 import { getChatApi } from "@/service/api";
 import Message from "@/components/Message";
 import { useChat, useStorage } from "@/hooks/index";
@@ -19,6 +19,9 @@ function ChatContent() {
   const { Header, Content, Footer } = Layout;
   const [collapsed, setCollapsed] = useRecoilState(collapse);
   const [inputValue, setInputValue] = useState<string | undefined>(undefined);
+
+  const themColor = useRecoilValue(themeMap);
+  const settingColor = useRecoilValue(setting).Theme;
   const prompt = useRef<string>("");
   const loadingRef = useRef<boolean>(false);
   const disabled = useMemo(() => {
@@ -84,6 +87,7 @@ function ChatContent() {
 
           try {
             const data = textAarry[textAarry.length - 1];
+            console.log("data.text", data.text);
             updateChat(uid, {
               content: data.text,
               inversion: true,
@@ -178,7 +182,14 @@ function ChatContent() {
               />
             ))
           ) : (
-            <h1 style={{ textAlign: "center" }}>期待您的发言~</h1>
+            <h1
+              style={{
+                textAlign: "center",
+                color: themColor[settingColor].color,
+              }}
+            >
+              期待您的发言~
+            </h1>
           )}
           {null}
         </div>
