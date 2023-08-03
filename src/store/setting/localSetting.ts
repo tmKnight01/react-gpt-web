@@ -1,12 +1,12 @@
 
 import { ls, } from '@/utils/strage';
-interface Setting {
+export  interface Setting {
     Theme: 'light' | 'drak',
     requstAvator: string,
     responseAvator: string
 
 }
-const LOCAL_SETTING = 'SETTING'
+export const LOCAL_SETTING = 'SETTING'
 
 const defaultSetting = (): Setting => {
     return {
@@ -21,6 +21,7 @@ const getLocalSetting = (): Setting => {
     const localSetting = ls.get(LOCAL_SETTING);
     return localSetting ?? defaultSetting()
 }
+
 
 
 

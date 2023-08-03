@@ -9,7 +9,8 @@ import {
 import { useRecoilValue, useRecoilState } from "recoil";
 import { chatSourceData } from "@/store/chat/chat";
 import { themeMap, setting } from "@/store/setting";
-import { useChat, useStorage } from "@/hooks";
+import { useChat, useStorage, useSetting } from "@/hooks";
+import { switchToTheme } from "@/constants/index";
 import collapse from "@/store/collpse";
 import "./index.scss";
 
@@ -22,6 +23,8 @@ const Slider = () => {
   const [collapsed, setCollapsed] = useRecoilState(collapse);
   const { addHistory, changeChat } = useChat();
   const { updateHistory, deleteHistory } = useStorage();
+  const { setSetting, soureSetting } = useSetting();
+
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isShow, setIsShow] = useState(false);
   const [idx, setIdx] = useState(-1);
@@ -38,10 +41,12 @@ const Slider = () => {
     updateHistory(item.uid, { title: (e.target as any).value });
     setIsEdit(false);
   };
-
+  const [form] = Form.useForm();
   useEffect(() => {
     idx !== -1 && setIsShow(true);
   }, [idx]);
+
+  const changeSetting = () => {};
 
   return (
     <>
@@ -76,7 +81,6 @@ const Slider = () => {
                 collapsed && setCollapsed((coll) => !coll);
                 switchChat(item.uid);
               }}
-              // style={{  }}
               icon={
                 collapsed ? (
                   <PlusSquareOutlined
@@ -160,14 +164,30 @@ const Slider = () => {
 
       <Modal
         open={settingIsShow}
-        onOk={() => setSettingIsShow(false)}
+        onOk={() => {
+          form
+            .validateFields()
+            .then((values) => {
+              form.resetFields();
+              console.log("value", values.theme.toString());
+              setSetting({
+                Theme: switchToTheme[`${values.theme.toString()}`],
+              });
+            })
+            .catch((info) => {
+              console.log("Validate Failed:", info);
+            });
+          setSettingIsShow(false);
+        }}
         onCancel={() => setSettingIsShow((val) => !val)}
       >
         <h2>
           <SettingOutlined style={{ marginRight: "10px" }} /> 设置
         </h2>
-        <Form>
-          <Form.Item name={"theme"} label="主题"></Form.Item>
+        <Form form={form}>
+          <Form.Item name={"theme"} label="主题">
+            <Switch defaultChecked={soureSetting.Theme === "drak"} />
+          </Form.Item>
         </Form>
       </Modal>
     </>

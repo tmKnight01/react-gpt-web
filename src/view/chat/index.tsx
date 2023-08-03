@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { Layout, Input, Button, theme } from "antd";
 import {
   SendOutlined,
@@ -12,6 +12,7 @@ import collapse from "@/store/collpse";
 import { themeMap, setting } from "@/store/setting";
 import { getChatApi } from "@/service/api";
 import Message from "@/components/Message";
+import { scrollToBottom } from "@/utils";
 import { useChat, useStorage } from "@/hooks/index";
 
 function ChatContent() {
@@ -19,7 +20,6 @@ function ChatContent() {
   const { Header, Content, Footer } = Layout;
   const [collapsed, setCollapsed] = useRecoilState(collapse);
   const [inputValue, setInputValue] = useState<string | undefined>(undefined);
-
   const themColor = useRecoilValue(themeMap);
   const settingColor = useRecoilValue(setting).Theme;
   const prompt = useRef<string>("");
@@ -31,12 +31,15 @@ function ChatContent() {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
   const { addChat, updateChat, sourceData } = useChat();
   const { getChatsByUid } = useStorage();
   const { uid = "" } = useParams();
   const chatsList = useMemo(() => {
     return getChatsByUid(uid);
   }, [uid, sourceData]);
+
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const optionList = chatsList.filter(
     (item) => item.inversion && !!item.conversationOption
@@ -46,6 +49,28 @@ function ChatContent() {
 
   let option = null as any;
   if (lastContext) option = lastContext;
+
+  useEffect(() => {
+    // const observer = new MutationObserver((mutationsList) => {
+    //   console.log("111", contentRef.current);
+    //   for (let mutation of mutationsList) {
+    //     if (
+    //       mutation.type === "attributes" &&
+    //       mutation.attributeName === "scrollheight"
+    //     ) {
+    //       scrollToBottom(contentRef.current as HTMLDivElement);
+    //     }
+    //   }
+    // });
+    // if (contentRef.current) {
+    //   observer.observe(contentRef.current, { attributes: true });
+    // }
+    // return () => {
+    //   observer.disconnect();
+
+    // };
+    contentRef.current && scrollToBottom(contentRef.current as HTMLDivElement);
+  }, [contentRef.current?.scrollHeight]);
 
   const onSubmit = async () => {
     if (!inputValue || inputValue.trim() === "") return;
@@ -153,7 +178,7 @@ function ChatContent() {
             display: "flex",
             alignItems: "center",
             textDecoration: " none",
-            color: "black",
+            color: themColor[settingColor].color,
           }}
         >
           tmKnight
@@ -162,8 +187,8 @@ function ChatContent() {
       </Header>
 
       <Content className="layout-content">
-        {/* <Scrollbars > */}
         <div
+          ref={contentRef}
           className="message-content"
           style={{
             background: colorBgContainer,
@@ -193,7 +218,6 @@ function ChatContent() {
           )}
           {null}
         </div>
-        {/* </Scrollbars> */}
       </Content>
 
       <Footer className="chat-footer">

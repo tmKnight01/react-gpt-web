@@ -55,6 +55,14 @@
     width: 100px;
     text-align: center;
 
+    &>span {
+        display: flex;
+        width: '100%';
+        overflow: hidden; //超出的文本隐藏
+        text-overflow: ellipsis; //溢出用省略号显示
+        white-space: nowrap; //溢出不换行
+    }
+
     &_btn {
         width: 80%;
 
@@ -64,6 +72,9 @@
             display: flex;
             justify-content: space-around;
             align-items: center;
+            overflow: hidden; //超出的文本隐藏
+            text-overflow: ellipsis; //溢出用省略号显示
+            white-space: nowrap; //溢出不换行
 
             &>span {
                 &>span:hover {

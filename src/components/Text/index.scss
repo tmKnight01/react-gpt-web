@@ -1,10 +1,17 @@
 .text {
-
+    width: 100%;
     color: #fff;
     padding: 8px 12px;
     background: rgba(22, 119, 255, .8);
     border-radius: 5px;
     font-size: 14px;
+
+    &>p {
+        width: 100%;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+        line-height: 24px;
+    }
 }
 
 .reply {
@@ -22,7 +29,8 @@
     p {
         white-space: pre-wrap;
         line-height: 28px;
-        &>code{
+
+        &>code {
             background-color: rgb(225, 224, 224);
             padding: 5px;
             border-radius: 5px;

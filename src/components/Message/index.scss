@@ -1,8 +1,8 @@
 .mes {
     width: 100%;
-    margin-bottom: 6px;
+    margin-bottom: 20px;
     display: flex;
- 
+
 
     &_avatar {
         width: 32px !important;
@@ -15,9 +15,10 @@
         display: flex;
         float: 1;
         flex-direction: column;
+        max-width: 50%;
         justify-content: space-around;
 
-        &> .message_chat {
+        &>.message_chat {
             font-size: 12px;
             --tw-text-opacity: 1;
             color: rgb(180 187 196 / var(--tw-text-opacity));

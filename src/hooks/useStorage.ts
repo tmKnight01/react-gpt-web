@@ -3,7 +3,6 @@ import { useNavigate } from "react-router";
 import { chatSourceData } from "@/store/chat/chat";
 import { cloneDeep } from "lodash";
 import { ls } from "@/utils/strage";
-
 const LOCAL_NAME = "CHAT";
 
 
@@ -89,7 +88,8 @@ function useStorage() {
     recordLocalStorage,
     getChatsByUid,
     updateHistory,
-    deleteHistory
+    deleteHistory,
+
   };
 }
 
