@@ -7,9 +7,9 @@ import axios, {
 } from "axios";
 import { message } from "antd";
 const intance = axios.create({
-  baseURL: import.meta.env.VITE_APP_API_BASE_URL,
+  baseURL:import.meta.env.VITE_APP_API_BASE_URL,
 });
-
+// import.meta.env.VITE_APP_API_BASE_URL
 intance.interceptors.request.use(
   (config) => {
     // 后期需要进行auth鉴权
@@ -63,20 +63,20 @@ function http<T = any>({
   signal,
   beforeRequest,
 }: //   afterRequest,
-  HttpOption) {
+HttpOption) {
   const successHandler = (res: AxiosResponse<Response<T>>) => {
     //兼容下返回数据流的情况
     if (res.data.status === "Success" || typeof res.data === "string")
       return Promise.resolve(res.data.data);
 
-
-    console.log('err mes', res.data);
+    console.log("err mes", res.data);
     // 还有一个鉴权问题,后期处理
     message.error(res.data.message || "Error");
     throw new Error(res.data.message || "Error");
   };
   const failHandler = (err: Response<Error>) => {
     message.error(err.message || "Error");
+    console.log("err.message", err.message);
     throw new Error(err.message || "Error");
   };
   method = method || "get";
@@ -89,11 +89,11 @@ function http<T = any>({
   // debugger
   return method === "get"
     ? intance
-      .get(url, { params, signal, onDownloadProgress })
-      .then(successHandler, failHandler)
+        .get(url, { params, signal, onDownloadProgress })
+        .then(successHandler, failHandler)
     : intance
-      .post(url, params, { headers, onDownloadProgress, onUploadProgress })
-      .then(successHandler, failHandler);
+        .post(url, params, { headers, onDownloadProgress, onUploadProgress })
+        .then(successHandler, failHandler);
 }
 
 export default http;
