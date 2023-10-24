@@ -27,6 +27,9 @@ const Slider = () => {
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [isShow, setIsShow] = useState(false);
+  const [themeStyle, setThemeStyle] = useState<boolean>(
+    soureSetting.Theme === "drak"
+  );
   const [idx, setIdx] = useState(-1);
   const addClick = () =>
     addHistory({ uid: Date.now(), title: "New Chat", isEdit: false });
@@ -45,8 +48,6 @@ const Slider = () => {
   useEffect(() => {
     idx !== -1 && setIsShow(true);
   }, [idx]);
-
-  const changeSetting = () => {};
 
   return (
     <>
@@ -171,7 +172,7 @@ const Slider = () => {
               form.resetFields();
               console.log("value", values.theme.toString());
               setSetting({
-                Theme: switchToTheme[`${values.theme.toString()}`],
+                Theme: switchToTheme[`${themeStyle}`] as any,
               });
             })
             .catch((info) => {
@@ -186,7 +187,18 @@ const Slider = () => {
         </h2>
         <Form form={form}>
           <Form.Item name={"theme"} label="主题">
-            <Switch defaultChecked={soureSetting.Theme === "drak"} />
+            <Switch
+              size="default"
+              checkedChildren="🌜"
+              unCheckedChildren="🌞"
+              checked={themeStyle}
+              onChange={(value) => setThemeStyle(value)}
+              style={{
+                backgroundColor: themeStyle
+                  ? "rgb(23,101,174)"
+                  : "rgb(187,188,188)",
+              }}
+            />
           </Form.Item>
         </Form>
       </Modal>

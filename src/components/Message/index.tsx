@@ -1,5 +1,7 @@
 import cx from "classnames";
 import Text from "@/components/Text";
+import { themeMap, setting } from "@/store/setting";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { Image } from "antd";
 import "./index.scss";
 interface ChatMessage {
@@ -17,6 +19,8 @@ const ChatMessage = ({
   content,
   isLoading = false,
 }: ChatMessage): JSX.Element => {
+  const themColor = useRecoilValue(themeMap);
+  const settingColor = useRecoilValue(setting).Theme;
   return (
     <div
       className={cx(cls)}
@@ -39,7 +43,10 @@ const ChatMessage = ({
       <div className={cx(`${cls}_content`)}>
         <div
           className="meaaage_chat"
-          style={{ textAlign: inversion ? "left" : "right" }}
+          style={{
+            textAlign: inversion ? "left" : "right",
+            color: themColor[settingColor].color,
+          }}
         >
           {dateTime || null}
         </div>

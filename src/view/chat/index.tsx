@@ -51,26 +51,8 @@ function ChatContent() {
   if (lastContext) option = lastContext;
 
   useEffect(() => {
-    // const observer = new MutationObserver((mutationsList) => {
-    //   console.log("111", contentRef.current);
-    //   for (let mutation of mutationsList) {
-    //     if (
-    //       mutation.type === "attributes" &&
-    //       mutation.attributeName === "scrollheight"
-    //     ) {
-    //       scrollToBottom(contentRef.current as HTMLDivElement);
-    //     }
-    //   }
-    // });
-    // if (contentRef.current) {
-    //   observer.observe(contentRef.current, { attributes: true });
-    // }
-    // return () => {
-    //   observer.disconnect();
-
-    // };
     contentRef.current && scrollToBottom(contentRef.current as HTMLDivElement);
-  }, [contentRef.current?.scrollHeight]);
+  }, [contentRef.current?.scrollHeight,chatsList.length]);
 
   const onSubmit = async () => {
     if (!inputValue || inputValue.trim() === "") return;
