@@ -1,0 +1,39 @@
+name: gpt-web-deploy
+
+# 当 'main' 分支发生 push 事件时触发 workflow
+on:
+  push:
+    branches: 
+      - main
+
+jobs:
+  # Job name (这一行的缩进看起来像是个问题)
+  build:
+    # 运行此作业的环境
+    runs-on: ubuntu-latest
+    steps:
+      # 获取源代码
+      - name: checkout to workflow
+        uses: actions/checkout@main
+      # 设置 node.js 环境
+      - name: use node-18
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18
+      # 运行构建命令
+      - name: npm install && build
+        run: |
+          npm install
+          npm run build
+        env:
+          CI: true
+      # 部署至服务器
+      - name: delopy code
+        uses: easingthemes/ssh-deploy@v2.0.7
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.TOKEN }}
+          ARGS: "-avzr --delete" # 同步命令参数
+          SOURCE: "dist/" # 需要同步的源目录
+          REMOTE_HOST: "114.132.56.36" # 远程主机
+          REMOTE_USER: "root" # 远程主机的用户
+          TARGET: "/tmp/server/nginx/nginx-1.21.0/project/gpt" # 远程主机的目标目录
