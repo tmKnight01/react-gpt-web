@@ -1,7 +1,7 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import { visualizer } from 'rollup-plugin-visualizer'
-import viteCompression from 'vite-plugin-compression'
+import { visualizer } from "rollup-plugin-visualizer";
+import viteCompression from "vite-plugin-compression";
 import { resolve } from "path";
 
 export default defineConfig((env) => {
@@ -9,25 +9,27 @@ export default defineConfig((env) => {
 
   return {
     envDir: "./env",
-    plugins: [react(), visualizer({
-      gzipSize: true,
-      brotliSize: true,
-      emitFile: false,
-      filename: "analyze.html", //分析图生成的文件名
-      open: true //如果存在本地服务端口，将在打包后自动展示
-    }), viteCompression()],
-
+    plugins: [
+      react(),
+      visualizer({
+        gzipSize: true,
+        brotliSize: true,
+        emitFile: false,
+        filename: "analyze.html", //分析图生成的文件名
+        open: true, //如果存在本地服务端口，将在打包后自动展示
+      }),
+      viteCompression(),
+    ],
+    base: "./",
     build: {
       rollupOptions: {
         output: {
           manualChunks: {
-            'react': ["react", "react-dom"],
+            react: ["react", "react-dom"],
             "antd-library": ["antd", "@ant-design/icons"],
-            'lodash': ['lodash'],
-            'highlight': ["highlight.js"]
-
+            lodash: ["lodash"],
+            highlight: ["highlight.js"],
           },
-
         },
       },
     },
@@ -65,5 +67,5 @@ export default defineConfig((env) => {
     //     }
     //   }
     // }
-  }
+  };
 });
