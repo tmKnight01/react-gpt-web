@@ -1,7 +1,7 @@
 import cx from "classnames";
 import Text from "@/components/Text";
 import { themeMap, setting } from "@/store/setting";
-import { useRecoilState, useRecoilValue } from "recoil";
+import {  useRecoilValue } from "recoil";
 import { Image } from "antd";
 import "./index.scss";
 interface ChatMessage {

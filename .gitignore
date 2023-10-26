@@ -9,6 +9,7 @@ lerna-debug.log*
 
 analyze.html
 pnpm-lock.yaml
+package-lock.json 
 
 node_modules
 .DS_Store
@@ -30,7 +31,8 @@ env
 *.njsproj
 *.sln
 *.sw?
-package-lock.json
 
+# 
+/env
 # Environment variables files
 /service/.env

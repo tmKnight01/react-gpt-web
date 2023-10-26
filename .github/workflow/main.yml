@@ -1,0 +1,50 @@
+# 指定工作流程的名称
+name: gpt-web-deploy
+
+# 指定此工作流程的触发事件Event. 使用 推送事件
+on: 
+  push:
+    branches: [main]
+
+jobs:
+     # 工作名称 build
+     build: 
+     # 工作的运行环境
+     runs-on: ubuntu-latest
+     steps: 
+        
+        - name:  checkout to workflow
+          uses: actions/checkout@main
+          # 安装node- 18
+        - name: use node-18
+          uses: actions/setup-node@v1
+          with: 
+               node-version: 18
+        - name: npm install && build
+          run: |
+               npm install
+               npm run build
+          env: 
+              CI: true 
+        # 部署至服务器
+        - name: delopy code 
+          uses: easingthemes/ssh-deploy@v2.0.7 
+          env: 
+              SSH_PRIVATE_KEY: ${{secrets.TOKEN}}
+
+              
+              
+              # 复制操作的参数。"-avzr --delete"意味部署时清空服务器目标目录下的文件
+              ARGS: "-avzr --delete" 
+              SOURCE: "dist/"
+              REMOMET_HOST: "114.132.56.36"
+              # 腾讯云默认用户名为root
+              REMOTE_USER: "root" 
+              # 目标目录  会讲打包后的源文件放在此处
+              TARGET: "/tmp/server/nginx/nginx-1.21.0/project/gpt" 
+
+
+      
+
+
+          
